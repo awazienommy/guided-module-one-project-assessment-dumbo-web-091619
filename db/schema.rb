@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 2019_10_01_030831) do
+ActiveRecord::Schema.define(version: 2019_10_01_144823) do
 
   create_table "companys", force: :cascade do |t|
     t.string "name"
@@ -21,32 +20,32 @@ ActiveRecord::Schema.define(version: 2019_10_01_030831) do
     t.string "location"
   end
 
-  create_table "govts", force: :cascade do |t|
-    t.string "name"
-    t.float "balance"
-    t.integer "account_num"
-=======
-ActiveRecord::Schema.define(version: 2019_10_01_144823) do
-
   create_table "customers", force: :cascade do |t|
     t.string "name"
     t.float "balance"
     t.integer "account_num"
     t.float "salary"
->>>>>>> 64577af3a1215a4f63a6e3081bb803023cde5475
+  end
+
+  create_table "govts", force: :cascade do |t|
+    t.string "name"
+    t.float "balance"
+    t.integer "account_num"
+  end
+
+  create_table "purchases", force: :cascade do |t|
+    t.integer "company_id"
+    t.integer "customer_id"
+    t.datetime "purchase_date"
+    t.float "purchase_amount"
   end
 
   create_table "taxes", force: :cascade do |t|
     t.integer "government_id"
     t.integer "customer_id"
-<<<<<<< HEAD
-    t.datetime "purchase_date"
-    t.float "purchase_amount"
-=======
     t.integer "amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
->>>>>>> 64577af3a1215a4f63a6e3081bb803023cde5475
   end
 
 end
