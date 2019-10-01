@@ -5,7 +5,6 @@ class CreatePurchases < ActiveRecord::Migration[5.2]
       t.integer :customer_id
       t.datetime :purchase_date
       t.float :purchase_amount
-
     end
   end
 end

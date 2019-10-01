@@ -1,6 +1,6 @@
 class Interface
     attr_reader :prompt
-    attr_accessor :govt
+    attr_accessor :government
 
     def initialize
         @prompt = TTY::Prompt.new

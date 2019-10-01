@@ -1,6 +1,6 @@
-class CreateGovts < ActiveRecord::Migration[5.2]
+class CreateGovernments < ActiveRecord::Migration[5.2]
   def change
-    create_table :govts do |t|
+    create_table :governments do |t|
       t.string :name
       t.float :balance
       t.integer :account_num

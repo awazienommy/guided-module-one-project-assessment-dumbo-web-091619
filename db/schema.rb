@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2019_10_01_144823) do
 
-  create_table "companys", force: :cascade do |t|
+  create_table "companies", force: :cascade do |t|
     t.string "name"
     t.float "balance"
     t.string "industry"
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 2019_10_01_144823) do
     t.float "salary"
   end
 
-  create_table "govts", force: :cascade do |t|
+  create_table "governments", force: :cascade do |t|
     t.string "name"
     t.float "balance"
     t.integer "account_num"

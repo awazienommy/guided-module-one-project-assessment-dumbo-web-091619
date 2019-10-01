@@ -1,6 +1,6 @@
-class CreateCompanys < ActiveRecord::Migration[5.2]
+class CreateCompanies < ActiveRecord::Migration[5.2]
   def change
-    create_table :companys do |t|      
+    create_table :companies do |t|
       t.string :name
       t.float :balance
       t.string :industry

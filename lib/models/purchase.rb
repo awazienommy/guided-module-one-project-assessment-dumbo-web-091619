@@ -1,4 +1,4 @@
 class Purchase < ActiveRecord::Base
     belongs_to :customers
-    belongs_to :companys
+    belongs_to :companies
 end
