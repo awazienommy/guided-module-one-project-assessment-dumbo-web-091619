@@ -36,13 +36,14 @@ ActiveRecord::Schema.define(version: 2019_10_01_144823) do
   create_table "purchases", force: :cascade do |t|
     t.integer "company_id"
     t.integer "customer_id"
-    t.datetime "purchase_date"
     t.float "purchase_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "taxes", force: :cascade do |t|
     t.integer "government_id"
-    t.integer "customer_id"
+    t.integer "company_id"
     t.integer "amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

@@ -2,8 +2,8 @@
 Government.destroy_all
 Company.destroy_all
 Customer.destroy_all
-# Purchase.destroy_all
-# Tax.destroy_all
+Purchase.destroy_all
+Tax.destroy_all
 
 # create governments
 # name balance account_num
@@ -40,10 +40,63 @@ pavel = Customer.create(name: "Pavel", balance: 100, account_num: 12345678909879
 
 
 
-#Create three purchases
-# amts = 3.times Faker::Number.unique.decimal(l_digits: 3, r_digits: 2)
-# end
-#
-# Purchase.create(customer: cust1, company: coy1, amount: amts.first)
-# Purchase.create(customer: cust2, company: coy2, amount: amts.second)
-# Purchase.create(customer: cust3, company: coy3, amount: amts.third)
+#Create purchases
+# company_id customer_id purchase_date purchase_amount
+#need to update the schema so that purchase date creates an automatic timestamp on creation
+Purchase.create(company_id: microsoft.id, customer_id: lyle.id, purchase_amount: 10)
+Purchase.create(company_id: boeing.id, customer_id: alex.id, purchase_amount: 10)
+Purchase.create(company_id: boeing.id, customer_id: reina.id, purchase_amount: 10)
+Purchase.create(company_id: microsoft.id, customer_id: rob.id, purchase_amount: 10)
+Purchase.create(company_id: google.id, customer_id: adeja.id, purchase_amount: 10)
+Purchase.create(company_id: google.id, customer_id: pavel.id, purchase_amount: 10)
+Purchase.create(company_id: boeing.id, customer_id: nicky.id, purchase_amount: 10)
+Purchase.create(company_id: microsoft.id, customer_id: gracie.id, purchase_amount: 10)
+Purchase.create(company_id: sweetgreen.id, customer_id: chinomnso.id, purchase_amount: 10)
+Purchase.create(company_id: sweetgreen.id, customer_id: eric.id, purchase_amount: 10)
+Purchase.create(company_id: microsoft.id, customer_id: lyle.id, purchase_amount: 10)
+Purchase.create(company_id: ford.id, customer_id: alex.id, purchase_amount: 10)
+Purchase.create(company_id: boeing.id, customer_id: reina.id, purchase_amount: 10)
+Purchase.create(company_id: microsoft.id, customer_id: rob.id, purchase_amount: 10)
+Purchase.create(company_id: ford.id, customer_id: adeja.id, purchase_amount: 10)
+Purchase.create(company_id: microsoft.id, customer_id: pavel.id, purchase_amount: 10)
+Purchase.create(company_id: ford.id, customer_id: nicky.id, purchase_amount: 10)
+Purchase.create(company_id: ford.id, customer_id: gracie.id, purchase_amount: 10)
+Purchase.create(company_id: sweetgreen.id, customer_id: chinomnso.id, purchase_amount: 10)
+Purchase.create(company_id: ford.id, customer_id: eric.id, purchase_amount: 10)
+Purchase.create(company_id: ford.id, customer_id: lyle.id, purchase_amount: 10)
+Purchase.create(company_id: ford.id, customer_id: alex.id, purchase_amount: 10)
+Purchase.create(company_id: sweetgreen.id, customer_id: reina.id, purchase_amount: 10)
+Purchase.create(company_id: ford.id, customer_id: rob.id, purchase_amount: 10)
+Purchase.create(company_id: ford.id, customer_id: adeja.id, purchase_amount: 10)
+
+
+
+
+
+# create taxes
+# government_id company_id amount
+Tax.create(company_id: microsoft.id, government_id: usa.id, amount: 10)
+Tax.create(company_id: boeing.id, government_id: france.id, amount: 10)
+Tax.create(company_id: boeing.id, government_id: britain.id, amount: 10)
+Tax.create(company_id: microsoft.id, government_id: usa.id, amount: 10)
+Tax.create(company_id: google.id, government_id: france.id, amount: 10)
+Tax.create(company_id: google.id, government_id: britain.id, amount: 10)
+Tax.create(company_id: boeing.id, government_id: usa.id, amount: 10)
+Tax.create(company_id: microsoft.id, government_id: france.id, amount: 10)
+Tax.create(company_id: sweetgreen.id, government_id: britain.id, amount: 10)
+Tax.create(company_id: sweetgreen.id, government_id: usa.id, amount: 10)
+Tax.create(company_id: microsoft.id, government_id: france.id, amount: 10)
+Tax.create(company_id: ford.id, government_id: britain.id, amount: 10)
+Tax.create(company_id: boeing.id, government_id: usa.id, amount: 10)
+Tax.create(company_id: microsoft.id, government_id: france.id, amount: 10)
+Tax.create(company_id: ford.id, government_id: britain.id, amount: 10)
+Tax.create(company_id: microsoft.id, government_id: usa.id, amount: 10)
+Tax.create(company_id: ford.id, government_id: france.id, amount: 10)
+Tax.create(company_id: ford.id, government_id: britain.id, amount: 10)
+Tax.create(company_id: sweetgreen.id, government_id: usa.id, amount: 10)
+Tax.create(company_id: ford.id, government_id: france.id, amount: 10)
+Tax.create(company_id: ford.id, government_id: britain.id, amount: 10)
+Tax.create(company_id: ford.id, government_id: france.id, amount: 10)
+Tax.create(company_id: sweetgreen.id, government_id: usa.id, amount: 10)
+Tax.create(company_id: ford.id, government_id: france.id, amount: 10)
+Tax.create(company_id: ford.id, government_id: britain.id, amount: 10)
