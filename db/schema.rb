@@ -10,28 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_01_031246) do
+ActiveRecord::Schema.define(version: 2019_10_01_030831) do
 
   create_table "companys", force: :cascade do |t|
-    t.integer "govt_id"
     t.string "name"
     t.float "balance"
-  end
-
-  create_table "customers", force: :cascade do |t|
-    t.string "name"
-    t.float "account_balance"
+    t.string "industry"
+    t.integer "account_num"
+    t.string "location"
   end
 
   create_table "govts", force: :cascade do |t|
     t.string "name"
-    t.integer "account_number"
+    t.float "balance"
+    t.integer "account_num"
   end
 
   create_table "purchases", force: :cascade do |t|
     t.integer "company_id"
     t.integer "customer_id"
-    t.float "amount"
+    t.datetime "purchase_date"
+    t.float "purchase_amount"
   end
 
 end
