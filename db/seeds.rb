@@ -100,3 +100,9 @@ Tax.create(company_id: ford.id, government_id: france.id, amount: 10)
 Tax.create(company_id: sweetgreen.id, government_id: usa.id, amount: 10)
 Tax.create(company_id: ford.id, government_id: france.id, amount: 10)
 Tax.create(company_id: ford.id, government_id: britain.id, amount: 10)
+
+
+
+puts "---------------------------------------------------------"
+puts "                    DB Seeded                            "
+puts "---------------------------------------------------------"
