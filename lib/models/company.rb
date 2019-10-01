@@ -1,6 +1,6 @@
 class Company < ActiveRecord::Base
     belongs_to :govt
 
-    has_many :purchases
-    has_many :customers, through: :purchases
+    has_many :taxs
+    has_many :company, through: :taxs
 end
