@@ -24,16 +24,16 @@ sweetgreen = Company.create(name: "SweetGreen", balance: 1000, industry: "Food",
 
 #Create customers
 # name balance account_num salary
-lyle = Customer.new(name: "Lyle", balance: 100, account_num: 12345678909871, salary: 100)
-alex = Customer.new(name: "Alex", balance: 100, account_num: 12345678909872, salary: 100)
-nicky = Customer.new(name: "Nicky", balance: 100, account_num: 12345678909873, salary: 100)
-gracie = Customer.new(name: "Gracie", balance: 100, account_num: 12345678909874, salary: 100)
-eric = Customer.new(name: "Eric", balance: 100, account_num: 42345678909874, salary: 100)
-chinomnso = Customer.new(name: "Chinomnso", balance: 100, account_num: 12345678909875, salary: 100)
-reina = Customer.new(name: "Reina", balance: 100, account_num: 12345678909876, salary: 100)
-rob = Customer.new(name: "Rob", balance: 100, account_num: 12345678909877, salary: 100)
-adeja = Customer.new(name: "Adeja", balance: 100, account_num: 12345678909878, salary: 100)
-pavel = Customer.new(name: "Pavel", balance: 100, account_num: 12345678909879, salary: 100)
+lyle = Customer.create(name: "Lyle", balance: 100, account_num: 12345678909871, salary: 100)
+alex = Customer.create(name: "Alex", balance: 100, account_num: 12345678909872, salary: 100)
+nicky = Customer.create(name: "Nicky", balance: 100, account_num: 12345678909873, salary: 100)
+gracie = Customer.create(name: "Gracie", balance: 100, account_num: 12345678909874, salary: 100)
+eric = Customer.create(name: "Eric", balance: 100, account_num: 42345678909874, salary: 100)
+chinomnso = Customer.create(name: "Chinomnso", balance: 100, account_num: 12345678909875, salary: 100)
+reina = Customer.create(name: "Reina", balance: 100, account_num: 12345678909876, salary: 100)
+rob = Customer.create(name: "Rob", balance: 100, account_num: 12345678909877, salary: 100)
+adeja = Customer.create(name: "Adeja", balance: 100, account_num: 12345678909878, salary: 100)
+pavel = Customer.create(name: "Pavel", balance: 100, account_num: 12345678909879, salary: 100)
 
 
 

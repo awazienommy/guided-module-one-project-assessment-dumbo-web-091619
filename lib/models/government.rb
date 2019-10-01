@@ -1,4 +1,4 @@
-class Goverment < ActiveRecord::Base
+class Government < ActiveRecord::Base
     has_many :companies
     has_many :purchases, through: :companies
     @@prompt = TTY::Prompt.new
