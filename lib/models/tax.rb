@@ -1,6 +1,6 @@
 class Tax < ActiveRecord::Base
-  belongs_to :governments
-  belongs_to :companies
+  belongs_to :government
+  belongs_to :company
 
   def self.new_tax(government_instance, company_instance, amount)
     # government_id company_id amount
@@ -8,11 +8,10 @@ class Tax < ActiveRecord::Base
   end
 
 
-  def self.tax_by_industry(industry_string)
+  def self.amount_of_tax_by_industry(industry_string)
 
-    company_ids = Company.all.filter { |company| company.industry == industry_string }.map { |company| company.id }
-    taxes = company_ids.map { |id| Tax.all.select { |tax| tax.company_id == id } }[0]
-    taxes.map { |tax| tax.amount }.sum
+    companies = Company.all.filter { |company| company.industry == industry_string }
+    companies.map { |company| company.taxes }[0].map { |tax| tax.amount }.sum
   end
 
 
