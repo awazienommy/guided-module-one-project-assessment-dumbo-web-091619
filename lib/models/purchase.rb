@@ -3,11 +3,13 @@ class Purchase < ActiveRecord::Base
   belongs_to :company
 
   def self.new_purchase(company_instance, customer_instance, purchase_amount)
+    # new purchase instance
     Purchase.create(company_id: company_instance.id, customer_id: customer_instance.id, purchase_amount: purchase_amount)
   end
 
 
   def self.get_refund(purchase_instance)
+    # create refund if not already refunded
     if purchase.refunded == true
       "Sorry, this has already been refunded"
     else
@@ -22,6 +24,7 @@ class Purchase < ActiveRecord::Base
 
 
   def self.revenue_by_industry(industry_string)
+    # this doesn't work
     # filtered = Purchase.all.filter { |purchase| purchase.company.industry == industry_string }
     # filtered.map { |purchase| purchase.company.sales_revenue }.first
   end
