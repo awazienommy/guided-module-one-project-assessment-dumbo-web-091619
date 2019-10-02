@@ -8,18 +8,22 @@ class Purchase < ActiveRecord::Base
 
 
   def self.get_refund(purchase_instance)
-    purchase_instance.company.balance -= purchase_instance.purchase_amount
-    purchase_instance.customer.balance += purchase_instance.purchase_amount
-    purchase_instance.refunded = true
-    purchase_instance.company.save
-    purchase_instance.customer.save
-    purchase_instance.save
-    purchase_instance.update(company.balance,)
+    if purchase.refunded == true
+      "Sorry, this has already been refunded"
+    else
+      purchase_instance.company.balance -= purchase_instance.purchase_amount
+      purchase_instance.customer.balance += purchase_instance.purchase_amount
+      purchase_instance.refunded = true
+      purchase_instance.company.save
+      purchase_instance.customer.save
+      purchase_instance.save
+    end
   end
 
 
   def self.revenue_by_industry(industry_string)
-    filtered = Purchase.all.filter { |purchase| purchase.company.industry == industry_string }
-    filtered.map { |purchase| purchase.company.sales_revenue }.first
+    # filtered = Purchase.all.filter { |purchase| purchase.company.industry == industry_string }
+    # filtered.map { |purchase| purchase.company.sales_revenue }.first
   end
+
 end
