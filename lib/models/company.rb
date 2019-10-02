@@ -38,4 +38,9 @@ class Company < ActiveRecord::Base
       Purchase.revenue_by_industry(name)
     end
   end
+
+
+  def self.find_by_name(name_string)
+    Company.all.filter { |company| company.name == name_string }
+  end
 end

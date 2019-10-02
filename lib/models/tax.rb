@@ -9,7 +9,6 @@ class Tax < ActiveRecord::Base
 
 
   def self.amount_of_tax_by_industry(industry_string)
-
     companies = Company.all.filter { |company| company.industry == industry_string }
     companies.map { |company| company.taxes }[0].map { |tax| tax.amount }.sum
   end
