@@ -1,15 +1,15 @@
 require_relative '../config/environment'
 
-interface = interface.new
-loggedInGovt = interface.welcome()
+interface = Interface.new
+interface.welcome
 
-while loggedInGovt.nil?
-    loggedInGovt = interface.welcome()
-end
+# while lobggedInGovt.nil?
+#     loggedInGovt = interface.welcome()
+# end
 
-interface.govt = loggedInGovt
-interface.govt.main_menu
+# interface.government = loggedInGovt
+# interface.government.main_menu
 
-binding.pry
+# binding.pry
 
-puts "hello world"
+# puts "hello world"

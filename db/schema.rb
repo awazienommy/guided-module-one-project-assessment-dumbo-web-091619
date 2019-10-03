@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_02_145421) do
+ActiveRecord::Schema.define(version: 2019_10_01_144823) do
 
   create_table "companies", force: :cascade do |t|
     t.string "name"
@@ -18,7 +18,6 @@ ActiveRecord::Schema.define(version: 2019_10_02_145421) do
     t.string "industry"
     t.integer "account_num"
     t.string "location"
-    t.float "product_price", default: 10.0
   end
 
   create_table "customers", force: :cascade do |t|
@@ -32,7 +31,9 @@ ActiveRecord::Schema.define(version: 2019_10_02_145421) do
     t.string "name"
     t.float "balance"
     t.integer "account_num"
-    t.float "tax_rate", default: 0.0
+    t.float "tax_rate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "purchases", force: :cascade do |t|
@@ -41,7 +42,6 @@ ActiveRecord::Schema.define(version: 2019_10_02_145421) do
     t.float "purchase_amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "refunded", default: false
   end
 
   create_table "taxes", force: :cascade do |t|
@@ -50,7 +50,6 @@ ActiveRecord::Schema.define(version: 2019_10_02_145421) do
     t.integer "amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "refunded", default: false
   end
 
 end

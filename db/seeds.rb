@@ -11,10 +11,16 @@ Tax.destroy_all
 
 # create governments
 # name balance account_num
+<<<<<<< HEAD
 usa = Government.create(name: "USA", balance: Faker::Number.decimal(l_digits: 8, r_digits: 2), account_num: Faker::Number.unique.number(digits: 13))
 france = Government.create(name: "France", balance: Faker::Number.decimal(l_digits: 6, r_digits: 2), account_num: Faker::Number.unique.number(digits: 13))
 britain = Government.create(name: "Britain", balance: Faker::Number.decimal(l_digits: 6, r_digits: 2), account_num: Faker::Number.unique.number(digits: 13))
 
+=======
+usa = Government.create(name: "USA", balance: 1000, account_num: 1234567891011, tax_rate: 0.00)
+france = Government.create(name: "France", balance: 1000, account_num: 1110987654321, tax_rate: 0.03)
+britain = Government.create(name: "Britain", balance: 1000, account_num: 1211109876543, tax_rate: 0.04)
+>>>>>>> chinomnso
 
 # Chooses a company at random and returns an array
 def choose_one_company

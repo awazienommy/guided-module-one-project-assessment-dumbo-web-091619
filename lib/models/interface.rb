@@ -1,6 +1,7 @@
 class Interface
     attr_reader :prompt
-    attr_accessor :government
+    attr_accessor :government, :company
+    
 
     def initialize
         @prompt = TTY::Prompt.new
@@ -8,11 +9,16 @@ class Interface
 
     def welcome
         puts "Hello, welcome to the National Tax Service platform"
-        @prompt.select("Are you a returning Country or a new Country?") do |menu|
-            menu.choice "Returning Country", -> {Govt.handle_returning_govt}
-            menu.choice "New Country", -> {Govt.handle_new_govt}
+        @prompt.select("Please select the appriopriate option") do |menu|
+            menu.choice "Returning Country", -> {Government.handle_returning_government} #done
+            menu.choice "New Country", -> {Government.handle_new_government} #done
+            menu.choice "Returning Company", -> {Company.handle_returning_company}
+            menu.choice "New Company", -> {Company.handle_new_company} #done
         end
     end
+
+    
+
 
 
 end
