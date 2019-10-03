@@ -10,6 +10,7 @@ class Government < ActiveRecord::Base
         acct_number = @@prompt.ask("What is your country's bank account number") 
         Government.create(name: country, balance: 0.00, account_num: acct_number)
         puts "Congratulations, you have created an account for your country with starting balance of $#{self.balance}."
+        #code (prompt) to either exit platform or go back to countries menu
     end
 
     #To chose yes or no @@prompt.yes?  can set it to a variable and use that variable for further manipulation. it returns true or false
@@ -18,7 +19,7 @@ class Government < ActiveRecord::Base
         country = @@prompt.ask("Welcome back. What is your country's name?")
         answer = Government.find_by(name: country)
         @@prompt.select(" Welcome back #{answer.name}, What would you want to do today?") do |menu|
-            menu.choice "Check Country Balance" , -> {answer.show_balance} #done
+            menu.choice "Check Country Balance" , -> {answer.check_balance} #done
             menu.choice "Check Tax Transactions", -> {answer.all_tax_records} #done
             menu.choice "Tax a company", -> {answer.tax_a_company} #done
             menu.choice "Change Tax rate", -> {answer.change_tax_rate} #done
@@ -29,10 +30,9 @@ class Government < ActiveRecord::Base
     end
     
 
-    def show_balance
+    def check_balance
         puts "The balance of your country's governement is $#{self.balance}"
         #code (prompt) to either exit platform or go back to countries menu
-
     end
 
     def all_tax_records
@@ -70,7 +70,7 @@ class Government < ActiveRecord::Base
 
     def companies_paying_taxes
         companies = []
-            output = Tax.select do |item| 
+            Tax.select do |item| 
                 if item.government_id == self.id
                 companies << Company.find_by(id: item.company_id).name
                 end
@@ -96,6 +96,5 @@ class Government < ActiveRecord::Base
         puts "Thanks for using the Tax Exchange platform today"
         exit
     end
-
 
 end
