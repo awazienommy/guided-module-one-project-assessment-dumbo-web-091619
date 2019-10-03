@@ -6,6 +6,7 @@ class CreateCompanies < ActiveRecord::Migration[5.2]
       t.string :industry
       t.integer :account_num
       t.string :location
+      
     end
   end
 end

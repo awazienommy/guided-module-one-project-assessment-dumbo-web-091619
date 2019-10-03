@@ -8,8 +8,9 @@ class Government < ActiveRecord::Base
     def self.handle_new_government
         country = @@prompt.ask("Welcome to the Tax Interchange. What is your country's name?")
         acct_number = @@prompt.ask("What is your country's bank account number") 
-        Government.create(name: country, balance: 0.00, account_num: acct_number)
-        puts "Congratulations, you have created an account for your country with starting balance of $#{self.balance}."
+        new_govt = Government.create(name: country, balance: 0.00, account_num: acct_number)
+        puts "Congratulations, you have created an account for your country with starting balance of $#{new_govt.balance}."
+        new_govt.prompt_to_go_to_main_menu
         #code (prompt) to either exit platform or go back to countries menu
     end
 
@@ -33,6 +34,8 @@ class Government < ActiveRecord::Base
     def check_balance
         puts "The balance of your country's governement is $#{self.balance}"
         #code (prompt) to either exit platform or go back to countries menu
+        self.reload
+        prompt_to_go_to_main_menu
     end
 
     def all_tax_records
@@ -45,7 +48,8 @@ class Government < ActiveRecord::Base
                 count += 1
             end
         end
-        #code (prompt) to either exit platform or go back to countries menu
+        self.reload
+        prompt_to_go_to_main_menu
     end
 
     def tax_a_company
@@ -57,7 +61,8 @@ class Government < ActiveRecord::Base
         Tax.create(government_id: self.id, company_id: company_to_be_taxed.id, amount: tax_amount) 
         company_to_be_taxed.update(balance: new_company_balance)
         self.update(balance: new_government_balance)
-        #code (prompt) to either exit platform or go back to countries menu
+        self.reload
+        prompt_to_go_to_main_menu
     end
 
     def change_tax_rate
@@ -65,7 +70,8 @@ class Government < ActiveRecord::Base
         new_rate = @@prompt.ask("What is the new Tax Rate? Please make in the format of 00.00", convert: :float)
         self.update(tax_rate:  new_rate)
         puts "You have successfully changed your country's tax rate from #{old_rate} to #{new_rate}."
-        #code (prompt) to either exit platform or go back to countries menu
+        self.reload
+        prompt_to_go_to_main_menu
     end
 
     def companies_paying_taxes
@@ -80,7 +86,8 @@ class Government < ActiveRecord::Base
         else
             puts companies.uniq
         end
-        #code (prompt) to either exit platform or go back to countries menu
+        self.reload
+        prompt_to_go_to_main_menu
     end
 
     def delete_country
@@ -88,6 +95,7 @@ class Government < ActiveRecord::Base
             self.delete
             puts "Sorry to see you leave #{self.name}. Hopefully you can come back to the tax interchange later"
         end
+        prompt_to_go_to_main_menu
         #put and else statement to take user back to countries menu if they chose no
         #code to go back to welcome menu
     end
@@ -95,6 +103,29 @@ class Government < ActiveRecord::Base
     def exit_platform
         puts "Thanks for using the Tax Exchange platform today"
         exit
+    end
+
+    def government_menu
+    end
+
+    def prompt_to_go_to_main_menu
+        @@prompt.select("What do you want to do?") do |menu|
+            menu.choice "Go back to main menu", -> {self.menu}
+            menu.choice "Exit Interchange Plaform", -> {exit}
+        end
+    end
+
+    def menu
+        # system "clear"
+            @@prompt.select(" Welcome back #{self.name}. What else would you want to do today?") do |menu|
+                menu.choice "Check Country Balance" , -> {check_balance} #done
+                menu.choice "Check Tax Transactions", -> {all_tax_records} #done
+                menu.choice "Tax a company", -> {tax_a_company} #done
+                menu.choice "Change Tax rate", -> {change_tax_rate} #done
+                menu.choice "Show companies that have paid taxes to Our Goverment", -> {companies_paying_taxes} #done
+                menu.choice "Delete Country Account", -> {delete_country} #done
+                menu.choice "Leave the interchange", -> {exit_platform} #done
+            end
     end
 
 end
