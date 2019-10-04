@@ -2,7 +2,7 @@ class Company < ActiveRecord::Base
   has_many :taxes
   has_many :purchases
   has_many :customers, through: :purchases
-  has_many :governements, through: :taxes
+  has_many :governments, through: :taxes
   @@prompt = TTY::Prompt.new
 
   def self.handle_new_company
@@ -30,16 +30,9 @@ class Company < ActiveRecord::Base
         menu.choice "Show all possible industries", -> {answer.get_all_industry_names} #done
         menu.choice "Find a company", -> {answer.find_company_by_name} #done
         menu.choice "See revenues by industry", -> {answer.revenue_by_industries} #done
-
-
-
-
-
-
-
-
-        menu.choice "Check Tax Transactions", -> {answer.taxes_payed} #done
+        menu.choice "Check Tax Transactions", -> {answer.all_tax_records} #done
         menu.choice "Governments Taxes were paid to", -> {answer.tax_recieving_governments} #done
+
         menu.choice "Pay Tax", -> {answer.pay_tax} #done
         menu.choice "Delete company Account", -> {answer.delete_company} #done
         menu.choice "Leave Platform", -> {Interface.exit_platform} #done
@@ -113,96 +106,86 @@ class Company < ActiveRecord::Base
     back_to_company_menu
   end
 
-  def revenue_by_industries # this doesn't work
+  def revenue_by_industries # this work
     industry_searched = @@prompt.ask("What industry are you looking at?")
-    result = Company.all.find_by(industry: industry_searched)
-    binding.pry
-    Company.each do |company|
+    total_by_industry = 0
+    Company.all.select do |company|
       if company.industry == industry_searched
-        result << company
+        total_by_industry += company.balance
       end
     end
-    result
-
-
-
-    Company.get_all_industry_names.each do |name|
-      Purchase.revenue_by_industry(name)
-    end
+    puts "The total revenue of #{industry_searched} industry is $#{total_by_industry}."
+    back_to_company_menu
   end
 
-
-
-
   def all_tax_records
-      count = 1
-      Tax.select do |item| 
-          if item.company_id == self.id
-              government = Government.find_by(id: item.government_id)
-              puts "#{count}. Recieving Governement: #{government.name} Transaction Date: #{item.created_at} Amount Paid: $#{item.amount}"
-              # binding.pry
-              puts
-              count += 1
+    if !taxes.empty?
+        taxes.each_with_index do |item, index|
+          if Government.find_by(id: item.government_id) != nil
+            government_search = Government.find_by(id: item.government_id)
+            government = government_search.name
+          else
+            government = "Government name unavailable"
           end
-      end
-      #code (prompt) to either exit platform or go back to countries menu
+          puts "#{index + 1}. Recieving Government: #{government} Transaction Date: #{item.created_at}, Amount: $#{item.amount}"
+          puts
+        end
+    else
+        puts "Your have not paid any taxes"
+    end
+    back_to_company_menu
   end
 
   def tax_recieving_governments
-      governments = []
-          Tax.select do |item| 
-              if item.company_id == self.id
-              governments << Government.find_by(id: item.government_id).name
-              end
-          end
-      if governments.empty?
-          puts "Your company ain't paid shit to nobody"
-      else
-          puts governments.uniq
-      end
-      #code (prompt) to either exit platform or go back to countries menu
+    if !governments.empty?
+      governments.each_with_index {|government, index| puts "#{index + 1}. Government name: #{government.name}" }
+    else
+      puts "You have not paid taxes to any government"
+    end
+    back_to_company_menu
   end
 
   def pay_tax
-      government = @@prompt.ask("What is the name of the Country you're paying to?")
+      government = @@prompt.ask("What is the exact name of the Country you're paying this tax to?")
       tax_recieving_government = Government.find_by(name: government)
       tax_amount = self.balance * tax_recieving_government.tax_rate
       new_company_balance = self.balance - tax_amount
       new_government_balance = tax_recieving_government.balance + tax_amount
-      Tax.create(government_id: tax_recieving_government.id, company_id: self.id, amount: tax_amount) 
+      Tax.create(government_id: tax_recieving_government.id, company_id: self.id, amount: tax_amount, refunded: false) 
       self.update(balance: new_company_balance)
       tax_recieving_government.update(balance: new_government_balance)
-      puts "#{self.name}, thanks for paying your taxes today"
-      #code (prompt) to either exit platform or go back to countries menu
+      puts "#{self.name}, thanks for paying a tax of $#{tax_amount} to #{tax_recieving_government.name} today"
+      back_to_company_menu 
   end
 
   def delete_company
-      if @@prompt.yes?("Are you sure you want to remove your company from the platform?")
-          self.delete
-          puts "Sorry to see you leave #{self.name}. Hopefully you can come back to the tax interchange later"
-      end
-      #put and else statement to take user back to countries menu if they chose no
-      #code to go back to welcome menu
+    if @@prompt.yes?("Do you want to delete all records for your company?")
+      taxes.all.each {|tax| tax.delete }
+      purchases.all.each {|purchase| purchase.delete }
+      self.delete
+      puts "Sorry to see you leave #{self.name}. Hopefully you can come back to the tax interchange later"
+  elsif @@prompt.yes?("Do you want to delete just the country account and leave your records?")
+      self.delete
+      puts "Sorry to see you leave #{self.name}. Hopefully you can come back to the tax interchange later"
+  end
+      Interface.welcome #Send them back to welcome page
   end
 
   def back_to_company_menu
     @@prompt.select(" Welcome back #{self.name}. What else would you want to do today?") do |menu|
       menu.choice "Check Company Balance" , -> {check_balance} #done
       menu.choice "Check Total Tax Paid to date", -> {taxes_payed} #done
-
-      # menu.choice "Check Tax Transactions", -> {all_tax_records} #done
-      # menu.choice "Tax a company", -> {tax_a_company} #done
-      # menu.choice "Change Tax rate", -> {change_tax_rate} #done
-      # menu.choice "Show companies that have paid taxes to Our Goverment", -> {companies_paying_taxes} #done
-      # menu.choice "Delete Country Account", -> {delete_country} #done
-      # menu.choice "Go back to welcome screen", -> {Interface.welcome} #done
+      menu.choice "Change product price", -> {change_product_price} #done
+      menu.choice "Check all sales transactions", -> {all_sales} #done
+      menu.choice "Check total sales revenue", -> {total_sales_revenue} #done
+      menu.choice "Check total sales revenue less refunds", -> {sales_revenue_less_refunds} #done
+      menu.choice "Show all possible industries", -> {get_all_industry_names} #done
+      menu.choice "Find a company", -> {find_company_by_name} #done
+      menu.choice "See revenues by industry", -> {revenue_by_industries} #done
+      menu.choice "Check Tax Transactions", -> {all_tax_records} #done
+      menu.choice "Governments Taxes were paid to", -> {tax_recieving_governments} #done
+      menu.choice "Pay Tax", -> {pay_tax} #done
       menu.choice "Leave the interchange", -> {Interface.exit_platform} #done
     end
-  end
-
-  def exit_platform
-      puts "Thanks for using the Tax Exchange platform today"
-      exit
-  end
-    
+  end  
 end

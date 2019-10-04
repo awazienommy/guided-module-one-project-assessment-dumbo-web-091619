@@ -13,8 +13,6 @@ class Government < ActiveRecord::Base
         Interface.government_main_menu
     end
 
-    #To chose yes or no @@prompt.yes?  can set it to a variable and use that variable for further manipulation. it returns true or false
-
     def self.handle_returning_government
         country = @@prompt.ask("Welcome back. What is your country's name?")
          answer = Government.find_by(name: country)
@@ -35,19 +33,14 @@ class Government < ActiveRecord::Base
         
     end
     
-
     def check_balance
         puts "The balance of your country's governement is $#{self.balance}"
         back_to_government_menu
     end
 
     def all_tax_records
-        taxes_collected = taxes.map do |tax|
-            tax
-        end
-
-        if !taxes_collected.empty?
-            taxes_collected.each_with_index do |item, index|
+        if !taxes.empty?
+            taxes.each_with_index do |item, index|
                 puts "#{index + 1}. Paying Company: #{Company.find(item.company_id).name} Transaction Date: #{item.created_at}, Amount: $#{item.amount}"
             end
         else
@@ -83,20 +76,22 @@ class Government < ActiveRecord::Base
         if companies.empty?
             puts "Your governement has no company paying revenue to it"
         else
-            puts companies.map {|company| company.name}.uniq
+            puts companies.map.with_index {|company, index| puts "#{index + 1}. Company name: #{company.name}"}.uniq
         end
         back_to_government_menu
     end
 
     def delete_country
-        if @@prompt.yes?("Are you sure you want to remove your governement from the platform?")
+        if @@prompt.yes?("Do you want to delete all records for your country?")
+            taxes.all.each {|tax| tax.delete }
+            self.delete
+            puts "Sorry to see you leave #{self.name}. Hopefully you can come back to the tax interchange later"
+        elsif @@prompt.yes?("Do you want to delete just the country account and leave your records?")
             self.delete
             puts "Sorry to see you leave #{self.name}. Hopefully you can come back to the tax interchange later"
         end
             Interface.welcome #Send them back to welcome page
     end
-    
-    
     
     def back_to_government_menu
         @@prompt.select(" Welcome back #{self.name}. What else would you want to do today?") do |menu|
@@ -112,16 +107,3 @@ class Government < ActiveRecord::Base
     end
     
 end
-
-# def prompt_to_go_to_main_menu
-#     @@prompt.select("What do you want to do?") do |menu|
-#         menu.choice "Go back to government menu", -> {Interface.back_to_government_menu}
-#         menu.choice "Go back to welcome page", -> {Interface.welcome}
-#         menu.choice "Exit Interchange Plaform", -> {Interface.exit_platform}
-#     end
-# end
-
-# def main_menu
-#     interface = Interface.new
-#     interface.welcome
-# end
