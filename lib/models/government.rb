@@ -9,6 +9,8 @@ class Government < ActiveRecord::Base
         country = @@prompt.ask("Welcome to the Tax Interchange. What is your country's name?")
         acct_number = @@prompt.ask("What is your country's bank account number") 
         new_govt = Government.create(name: country, balance: 0.00, account_num: acct_number)
+        system "clear"
+        puts "----------------------------"
         puts "Congratulations, you have created an account for your country, #{new_govt.name} with starting balance of $#{new_govt.balance}."
         Interface.government_main_menu
     end
@@ -28,22 +30,30 @@ class Government < ActiveRecord::Base
                 menu.choice "Leave the interchange", -> {Interface.exit_platform} #done
             end
         end
+        system "clear"
+        puts "----------------------------"
         puts "Country not found"
         Interface.government_main_menu #send them back to the government entry menu
         
     end
     
     def check_balance
+        system "clear"
+        puts "----------------------------"
         puts "The balance of your country's governement is $#{self.balance}"
         back_to_government_menu
     end
 
     def all_tax_records
         if !taxes.empty?
+            system "clear"
+            puts "----------------------------"
             taxes.each_with_index do |item, index|
                 puts "#{index + 1}. Paying Company: #{Company.find(item.company_id).name} Transaction Date: #{item.created_at}, Amount: $#{item.amount}"
             end
         else
+            system "clear"
+            puts "----------------------------"
             puts "Your government have not recieved any taxes"
         end
         back_to_government_menu
@@ -58,7 +68,9 @@ class Government < ActiveRecord::Base
             Tax.create(government_id: self.id, company_id: company_to_be_taxed.id, amount: tax_amount) 
             company_to_be_taxed.update(balance: new_company_balance)
             self.update(balance: new_government_balance)
-            puts "#{self.name} has just recieved a tax of $#{tax_amount} from #{company_to_be_taxed.name}"
+            system "clear"
+            puts "----------------------------"
+            puts "\n#{self.name} has just recieved a tax of $#{tax_amount} from #{company_to_be_taxed.name}"
         end
         back_to_government_menu
     end
@@ -68,15 +80,22 @@ class Government < ActiveRecord::Base
         new_rate_input = @@prompt.ask("What is the new Tax Rate? Please type in numbers only", convert: :float)
         new_rate = new_rate_input / 100
         self.update(tax_rate:  new_rate)
+        system "clear"
+        puts "----------------------------"
         puts "Hi #{self.name}, you have successfully changed your country's tax rate from #{old_rate * 100}% to #{new_rate * 100}%."
         back_to_government_menu
     end
 
     def companies_paying_taxes
         if companies.empty?
+            system "clear"
+            puts "----------------------------"
             puts "Your governement has no company paying revenue to it"
         else
-            puts companies.map.with_index {|company, index| puts "#{index + 1}. Company name: #{company.name}"}.uniq
+            names = companies.map {|company| company.name}.uniq
+            system "clear"
+            puts "----------------------------"
+            names.each_with_index {|company, index| puts "#{index + 1}. Company name: #{company}"}
         end
         back_to_government_menu
     end
@@ -85,9 +104,13 @@ class Government < ActiveRecord::Base
         if @@prompt.yes?("Do you want to delete all records for your country?")
             taxes.all.each {|tax| tax.delete }
             self.delete
+            system "clear"
+            puts "----------------------------"
             puts "Sorry to see you leave #{self.name}. Hopefully you can come back to the tax interchange later"
         elsif @@prompt.yes?("Do you want to delete just the country account and leave your records?")
             self.delete
+            system "clear"
+            puts "----------------------------"
             puts "Sorry to see you leave #{self.name}. Hopefully you can come back to the tax interchange later"
         end
             Interface.welcome #Send them back to welcome page

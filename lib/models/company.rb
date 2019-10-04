@@ -11,6 +11,8 @@ class Company < ActiveRecord::Base
     industry = @@prompt.ask("What industry does your company operate in?") 
     location = @@prompt.ask("Where is your company located?") 
     new_company = Company.create(name: company_name, balance: 0.00, industry: industry, account_num: acct_number, location: location)
+    system "clear"
+    puts "----------------------------"
     puts "Congratulations, you have created an account for your company, #{new_company.name} with starting balance of $#{new_company.balance}."
     Interface.company_main_menu 
   end
@@ -19,6 +21,8 @@ class Company < ActiveRecord::Base
     company_name = @@prompt.ask("Welcome to the Tax Interchange. What is your company's name?")
     answer = Company.find_by(name: company_name)
     if answer != nil #This catches when the country doesn't exist in the database
+      system "clear"
+      puts "----------------------------"
       puts "Welcome back #{answer.name}"
       @@prompt.select("What would you want to do today #{answer.name}?") do |menu|
         menu.choice "Check Company Balance" , -> {answer.check_balance} #done
@@ -32,22 +36,27 @@ class Company < ActiveRecord::Base
         menu.choice "See revenues by industry", -> {answer.revenue_by_industries} #done
         menu.choice "Check Tax Transactions", -> {answer.all_tax_records} #done
         menu.choice "Governments Taxes were paid to", -> {answer.tax_recieving_governments} #done
-
         menu.choice "Pay Tax", -> {answer.pay_tax} #done
         menu.choice "Delete company Account", -> {answer.delete_company} #done
         menu.choice "Leave Platform", -> {Interface.exit_platform} #done
       end
     end
+    system "clear"
+    puts "----------------------------"
     puts "Company not found"
     Interface.company_main_menu #send them back to the company entry menu
   end
   
   def check_balance #check balance of company
+    system "clear"
+    puts "----------------------------"
     puts "The balance of your company is $#{self.balance}"
     back_to_company_menu
   end
   
   def taxes_payed  # total taxes payed by a company
+    system "clear"
+    puts "----------------------------"
     puts "Your company has paid a total of $#{taxes.map { |tax| tax.amount}.sum} to date"
     back_to_company_menu
   end
@@ -56,11 +65,15 @@ class Company < ActiveRecord::Base
   def change_product_price # update product price
     new_price = @@prompt.ask("What is the new product price? Type the new price in this format '00.00'")
     self.update(product_price: new_price)
+    system "clear"
+    puts "----------------------------"
     puts "Your product price has been successfully changed to #{self.product_price}"
     back_to_company_menu
   end
 
   def all_sales #lists all sales
+    system "clear"
+    puts "----------------------------"
     puts "Here are sales made so far"
     purchases.each_with_index  {|purchase, index| puts "#{index + 1}. Purchase Date: #{purchase.created_at}, Customer: #{Customer.find(purchase.customer_id).name}, Purchase amount: $#{purchase.purchase_amount}"}
     # binding.pry 
@@ -71,6 +84,8 @@ class Company < ActiveRecord::Base
     total_sale_income = 0
     purchases.map {|purchase| total_sale_income += purchase.purchase_amount}
     total_sale_income
+    system "clear"
+    puts "----------------------------"
     puts "The total sales for your company amounts to $#{total_sale_income}"
     back_to_company_menu
   end
@@ -83,6 +98,8 @@ class Company < ActiveRecord::Base
       end
     end
     total_sale_income
+    system "clear"
+    puts "----------------------------"
     puts "The total sales for your company less revenue amounts to $#{total_sale_income}"
     back_to_company_menu
   end
@@ -90,8 +107,11 @@ class Company < ActiveRecord::Base
 
 
   def get_all_industry_names # get a list of all industries in db
+    system "clear"
+    puts "----------------------------"
     puts "Here is the list of all industries that all companies operate in"
-    Company.all.map.with_index { |company, index| puts "#{index +1}. #{company.industry}" }.uniq
+    output = Company.all.map {|company| company.industry}.uniq
+    output.map.with_index { |company, index| puts "#{index +1}. #{company}" }
     back_to_company_menu
   end
 
@@ -99,8 +119,12 @@ class Company < ActiveRecord::Base
     company_searched = @@prompt.ask("What is the exact name of the company you are looking for?")
     result = Company.find_by(name: company_searched)
     if result != nil
+      system "clear"
+      puts "----------------------------"
       puts "#{result.name} was found. They are located at #{result.location} and operate in #{result.industry} industry."
     else
+      system "clear"
+      puts "----------------------------"
       puts "#{company_searched} was not found."
     end
     back_to_company_menu
@@ -114,6 +138,8 @@ class Company < ActiveRecord::Base
         total_by_industry += company.balance
       end
     end
+    system "clear"
+    puts "----------------------------"
     puts "The total revenue of #{industry_searched} industry is $#{total_by_industry}."
     back_to_company_menu
   end
@@ -138,7 +164,7 @@ class Company < ActiveRecord::Base
 
   def tax_recieving_governments
     if !governments.empty?
-      governments.each_with_index {|government, index| puts "#{index + 1}. Government name: #{government.name}" }
+      governments.uniq.each_with_index {|government, index| puts "#{index + 1}. Government name: #{government.name}" }
     else
       puts "You have not paid taxes to any government"
     end
@@ -154,6 +180,8 @@ class Company < ActiveRecord::Base
       Tax.create(government_id: tax_recieving_government.id, company_id: self.id, amount: tax_amount, refunded: false) 
       self.update(balance: new_company_balance)
       tax_recieving_government.update(balance: new_government_balance)
+      system "clear"
+      puts "----------------------------"
       puts "#{self.name}, thanks for paying a tax of $#{tax_amount} to #{tax_recieving_government.name} today"
       back_to_company_menu 
   end
@@ -163,9 +191,13 @@ class Company < ActiveRecord::Base
       taxes.all.each {|tax| tax.delete }
       purchases.all.each {|purchase| purchase.delete }
       self.delete
+      system "clear"
+      puts "----------------------------"
       puts "Sorry to see you leave #{self.name}. Hopefully you can come back to the tax interchange later"
   elsif @@prompt.yes?("Do you want to delete just the country account and leave your records?")
       self.delete
+      system "clear"
+      puts "----------------------------"
       puts "Sorry to see you leave #{self.name}. Hopefully you can come back to the tax interchange later"
   end
       Interface.welcome #Send them back to welcome page

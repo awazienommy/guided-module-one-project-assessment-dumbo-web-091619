@@ -7,6 +7,7 @@ class Customer < ActiveRecord::Base
 
     
   def self.new_purchase
+    system "clear"
     customer_input = @@prompt.ask("What is your name?")
     customer = Customer.find_by(name: customer_input)
     company_input = @@prompt.ask("What company are you buying from?")
@@ -24,6 +25,7 @@ class Customer < ActiveRecord::Base
 
 
   def self.make_return
+    system "clear"
     customer_name_input= @@prompt.ask("What is your name?")
     customer = Customer.find_by(name: customer_name_input)
     customer_amount_input = @@prompt.ask("What what is the purchase amount?").to_f
