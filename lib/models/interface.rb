@@ -4,7 +4,6 @@ class Interface
     @@prompt = TTY::Prompt.new
 
     
-
     def initialize
         @@prompt = TTY::Prompt.new
     end

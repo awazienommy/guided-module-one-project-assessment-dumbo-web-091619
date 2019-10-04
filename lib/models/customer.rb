@@ -38,6 +38,8 @@ class Customer < ActiveRecord::Base
     Interface.customer_main_menu
   end
 
+end
+
 
 #   def list_of_purchases
 #     # get a list of all purchases for an instance using ActiveRecord magic
