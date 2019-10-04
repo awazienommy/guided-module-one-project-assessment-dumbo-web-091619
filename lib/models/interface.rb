@@ -14,7 +14,7 @@ class Interface
         @@prompt.select("Please select option that best describes you") do |menu|
             menu.choice "Country or government", -> {government_main_menu}
             menu.choice "A Company", -> {company_main_menu}
-            menu.choice "Individual", -> {Customer.handle_customer}
+            menu.choice "Individual", -> {customer_main_menu}
             menu.choice "Exit Interchange Plaform", -> {exit_platform}
 
         end
@@ -24,6 +24,20 @@ class Interface
         @@prompt.select("Hi Country, which one are you?") do |menu|
             menu.choice "Returning Country/Government", -> {Government.handle_returning_government} #done
             menu.choice "New Country/Governmnent", -> {Government.handle_new_government} #done
+            menu.choice "Go back to welcome screen", -> {welcome} #done
+
+        end
+    end
+
+    def self.customer_main_menu
+        @@prompt.select("Welcome to Tax Interchange, what would you want to do today?") do |menu|
+            menu.choice "Make a purchase", -> {Customer.new_purchase}
+            menu.choice "Return a purchase", -> {Customer.make_return}
+            # menu.choice "List purchases", -> {Customer.list_of_purchases}
+            # menu.choice "How much have I spent in total?", -> {Customer.total_amount_spent}
+            # menu.choice "What is my average spending?", -> {Customer.average_amount_spent}
+            # menu.choice "Earn money", -> {Customer.do_work}
+            # menu.choice "Close account", -> {Customer.close_account}
             menu.choice "Go back to welcome screen", -> {welcome} #done
 
         end
