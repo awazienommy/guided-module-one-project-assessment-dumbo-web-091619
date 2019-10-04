@@ -1,93 +1,91 @@
 
 require 'tty-prompt'
 class Government < ActiveRecord::Base
-    has_many :companies
-    has_many :purchases, through: :companies
+    has_many :taxes
+    has_many :companies, through: :taxes
     @@prompt = TTY::Prompt.new
 
     def self.handle_new_government
         country = @@prompt.ask("Welcome to the Tax Interchange. What is your country's name?")
         acct_number = @@prompt.ask("What is your country's bank account number") 
         new_govt = Government.create(name: country, balance: 0.00, account_num: acct_number)
-        puts "Congratulations, you have created an account for your country with starting balance of $#{new_govt.balance}."
-        new_govt.prompt_to_go_to_main_menu
-        #code (prompt) to either exit platform or go back to countries menu
+        puts "Congratulations, you have created an account for your country, #{new_govt.name} with starting balance of $#{new_govt.balance}."
+        Interface.government_main_menu
     end
 
     #To chose yes or no @@prompt.yes?  can set it to a variable and use that variable for further manipulation. it returns true or false
 
     def self.handle_returning_government
         country = @@prompt.ask("Welcome back. What is your country's name?")
-        answer = Government.find_by(name: country)
-        @@prompt.select(" Welcome back #{answer.name}, What would you want to do today?") do |menu|
-            menu.choice "Check Country Balance" , -> {answer.check_balance} #done
-            menu.choice "Check Tax Transactions", -> {answer.all_tax_records} #done
-            menu.choice "Tax a company", -> {answer.tax_a_company} #done
-            menu.choice "Change Tax rate", -> {answer.change_tax_rate} #done
-            menu.choice "Show companies that have paid taxes to Our Goverment", -> {answer.companies_paying_taxes} #done
-            menu.choice "Delete Country Account", -> {answer.delete_country} #done
-            menu.choice "Leave the interchange", -> {answer.exit_platform} #done
+         answer = Government.find_by(name: country)
+         if answer != nil #This catches when the country doesn't exist in the database
+            @@prompt.select(" Welcome back #{answer.name}, What would you want to do today?") do |menu|
+                menu.choice "Check Country Balance" , -> {answer.check_balance} #done
+                menu.choice "Check Tax Transactions", -> {answer.all_tax_records} #done
+                menu.choice "Tax a company", -> {answer.tax_a_company} #done
+                menu.choice "Change Tax rate", -> {answer.change_tax_rate} #done
+                menu.choice "Show companies that have paid taxes to Our Goverment", -> {answer.companies_paying_taxes} #done
+                menu.choice "Delete Country Account", -> {answer.delete_country} #done
+                menu.choice "Go back to welcome screen", -> {Interface.welcome} #done
+                menu.choice "Leave the interchange", -> {Interface.exit_platform} #done
+            end
         end
+        puts "Country not found"
+        Interface.government_main_menu #send them back to the government entry menu
+        
     end
     
 
     def check_balance
         puts "The balance of your country's governement is $#{self.balance}"
-        #code (prompt) to either exit platform or go back to countries menu
-        self.reload
-        prompt_to_go_to_main_menu
+        back_to_government_menu
     end
 
     def all_tax_records
-        count = 1
-       Tax.select do |item| 
-            if item.government_id == self.id
-                company = Company.find_by(id: item.company_id)
-                puts "#{count}. Paying Company:#{company.name} Transaction Date: #{item.created_at} Amount Paid: $#{item.amount}"
-                puts
-                count += 1
-            end
+        taxes_collected = taxes.map do |tax|
+            tax
         end
-        self.reload
-        prompt_to_go_to_main_menu
+
+        if !taxes_collected.empty?
+            taxes_collected.each_with_index do |item, index|
+                puts "#{index + 1}. Paying Company: #{Company.find(item.company_id).name} Transaction Date: #{item.created_at}, Amount: $#{item.amount}"
+            end
+        else
+            puts "Your government have not recieved any taxes"
+        end
+        back_to_government_menu
     end
 
     def tax_a_company
         company = @@prompt.ask("What is the name of the company you want to tax?")
-        company_to_be_taxed = Company.find_by(name: company)
-        tax_amount = company_to_be_taxed.balance * self.tax_rate
-        new_company_balance = company_to_be_taxed.balance - tax_amount
-        new_government_balance = self.balance + tax_amount
-        Tax.create(government_id: self.id, company_id: company_to_be_taxed.id, amount: tax_amount) 
-        company_to_be_taxed.update(balance: new_company_balance)
-        self.update(balance: new_government_balance)
-        self.reload
-        prompt_to_go_to_main_menu
+        if company_to_be_taxed = Company.find_by(name: company)
+            tax_amount = company_to_be_taxed.balance * self.tax_rate
+            new_company_balance = company_to_be_taxed.balance - tax_amount
+            new_government_balance = self.balance + tax_amount
+            Tax.create(government_id: self.id, company_id: company_to_be_taxed.id, amount: tax_amount) 
+            company_to_be_taxed.update(balance: new_company_balance)
+            self.update(balance: new_government_balance)
+            puts "#{self.name} has just recieved a tax of $#{tax_amount} from #{company_to_be_taxed.name}"
+        end
+        back_to_government_menu
     end
 
     def change_tax_rate
         old_rate = self.tax_rate
-        new_rate = @@prompt.ask("What is the new Tax Rate? Please make in the format of 00.00", convert: :float)
+        new_rate_input = @@prompt.ask("What is the new Tax Rate? Please type in numbers only", convert: :float)
+        new_rate = new_rate_input / 100
         self.update(tax_rate:  new_rate)
-        puts "You have successfully changed your country's tax rate from #{old_rate} to #{new_rate}."
-        self.reload
-        prompt_to_go_to_main_menu
+        puts "Hi #{self.name}, you have successfully changed your country's tax rate from #{old_rate * 100}% to #{new_rate * 100}%."
+        back_to_government_menu
     end
 
     def companies_paying_taxes
-        companies = []
-            Tax.select do |item| 
-                if item.government_id == self.id
-                companies << Company.find_by(id: item.company_id).name
-                end
-            end
         if companies.empty?
             puts "Your governement has no company paying revenue to it"
         else
-            puts companies.uniq
+            puts companies.map {|company| company.name}.uniq
         end
-        self.reload
-        prompt_to_go_to_main_menu
+        back_to_government_menu
     end
 
     def delete_country
@@ -95,37 +93,35 @@ class Government < ActiveRecord::Base
             self.delete
             puts "Sorry to see you leave #{self.name}. Hopefully you can come back to the tax interchange later"
         end
-        prompt_to_go_to_main_menu
-        #put and else statement to take user back to countries menu if they chose no
-        #code to go back to welcome menu
+            Interface.welcome #Send them back to welcome page
     end
-
-    def exit_platform
-        puts "Thanks for using the Tax Exchange platform today"
-        exit
-    end
-
-    def government_menu
-    end
-
-    def prompt_to_go_to_main_menu
-        @@prompt.select("What do you want to do?") do |menu|
-            menu.choice "Go back to main menu", -> {self.menu}
-            menu.choice "Exit Interchange Plaform", -> {exit}
+    
+    
+    
+    def back_to_government_menu
+        @@prompt.select(" Welcome back #{self.name}. What else would you want to do today?") do |menu|
+            menu.choice "Check Country Balance" , -> {check_balance} #done
+            menu.choice "Check Tax Transactions", -> {all_tax_records} #done
+            menu.choice "Tax a company", -> {tax_a_company} #done
+            menu.choice "Change Tax rate", -> {change_tax_rate} #done
+            menu.choice "Show companies that have paid taxes to Our Goverment", -> {companies_paying_taxes} #done
+            menu.choice "Delete Country Account", -> {delete_country} #done
+            menu.choice "Go back to welcome screen", -> {Interface.welcome} #done
+            menu.choice "Leave the interchange", -> {Interface.exit_platform} #done
         end
     end
-
-    def menu
-        # system "clear"
-            @@prompt.select(" Welcome back #{self.name}. What else would you want to do today?") do |menu|
-                menu.choice "Check Country Balance" , -> {check_balance} #done
-                menu.choice "Check Tax Transactions", -> {all_tax_records} #done
-                menu.choice "Tax a company", -> {tax_a_company} #done
-                menu.choice "Change Tax rate", -> {change_tax_rate} #done
-                menu.choice "Show companies that have paid taxes to Our Goverment", -> {companies_paying_taxes} #done
-                menu.choice "Delete Country Account", -> {delete_country} #done
-                menu.choice "Leave the interchange", -> {exit_platform} #done
-            end
-    end
-
+    
 end
+
+# def prompt_to_go_to_main_menu
+#     @@prompt.select("What do you want to do?") do |menu|
+#         menu.choice "Go back to government menu", -> {Interface.back_to_government_menu}
+#         menu.choice "Go back to welcome page", -> {Interface.welcome}
+#         menu.choice "Exit Interchange Plaform", -> {Interface.exit_platform}
+#     end
+# end
+
+# def main_menu
+#     interface = Interface.new
+#     interface.welcome
+# end

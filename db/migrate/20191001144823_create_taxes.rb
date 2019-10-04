@@ -4,7 +4,7 @@ class CreateTaxes < ActiveRecord::Migration[5.2]
       t.integer :government_id
       t.integer :company_id
       t.integer :amount
-      t.boolean :refunded default: false
+      t.boolean :refunded, default: false
 
       t.timestamps
     end

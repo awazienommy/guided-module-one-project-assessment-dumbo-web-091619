@@ -14,10 +14,11 @@ ActiveRecord::Schema.define(version: 2019_10_01_144823) do
 
   create_table "companies", force: :cascade do |t|
     t.string "name"
-    t.float "balance"
+    t.float "balance", default: 0.0
     t.string "industry"
     t.integer "account_num"
     t.string "location"
+    t.float "product_price", default: 10.0
   end
 
   create_table "customers", force: :cascade do |t|
@@ -29,9 +30,9 @@ ActiveRecord::Schema.define(version: 2019_10_01_144823) do
 
   create_table "governments", force: :cascade do |t|
     t.string "name"
-    t.float "balance"
+    t.float "balance", default: 0.0
     t.integer "account_num"
-    t.float "tax_rate"
+    t.float "tax_rate", default: 0.0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -40,6 +41,7 @@ ActiveRecord::Schema.define(version: 2019_10_01_144823) do
     t.integer "company_id"
     t.integer "customer_id"
     t.float "purchase_amount"
+    t.boolean "refunded", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -48,6 +50,7 @@ ActiveRecord::Schema.define(version: 2019_10_01_144823) do
     t.integer "government_id"
     t.integer "company_id"
     t.integer "amount"
+    t.boolean "refunded", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -1,7 +1,7 @@
 require_relative '../config/environment'
 
-interface = Interface.new
-interface.welcome
+# interface = Interface.new
+Interface.welcome
 
 # while lobggedInGovt.nil?
 #     loggedInGovt = interface.welcome()
