@@ -3,9 +3,9 @@ class CreatePurchases < ActiveRecord::Migration[5.2]
     create_table :purchases do |t|
       t.integer :company_id
       t.integer :customer_id
+      t.string :product_name
       t.float :purchase_amount
       t.boolean :refunded, default: false
-      
       t.timestamps
     end
   end

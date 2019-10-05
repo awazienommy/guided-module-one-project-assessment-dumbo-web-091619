@@ -11,7 +11,7 @@ class Government < ActiveRecord::Base
         new_govt = Government.create(name: country, balance: 0.00, account_num: acct_number)
         system "clear"
         puts "----------------------------"
-        puts "Congratulations, you have created an account for your country, #{new_govt.name} with starting balance of $#{new_govt.balance}."
+        puts "Congratulations, you have created an account for your country, #{new_govt.name}", "Starting balance: $#{new_govt.balance}."
         Interface.government_main_menu
     end
 
@@ -49,7 +49,7 @@ class Government < ActiveRecord::Base
             system "clear"
             puts "----------------------------"
             taxes.each_with_index do |item, index|
-                puts "#{index + 1}. Paying Company: #{Company.find(item.company_id).name} Transaction Date: #{item.created_at}, Amount: $#{item.amount}"
+                puts "Tax No#{index + 1}", "Paying Company: #{Company.find(item.company_id).name}", "Transaction Date: #{item.created_at}", "Amount: $#{item.amount}"
             end
         else
             system "clear"
@@ -70,7 +70,7 @@ class Government < ActiveRecord::Base
             self.update(balance: new_government_balance)
             system "clear"
             puts "----------------------------"
-            puts "\n#{self.name} has just recieved a tax of $#{tax_amount} from #{company_to_be_taxed.name}"
+            puts "Receiving Government: #{self.name}", "Tax Amount: $#{tax_amount}", "Paying Company: #{company_to_be_taxed.name}"
         end
         back_to_government_menu
     end
@@ -82,7 +82,7 @@ class Government < ActiveRecord::Base
         self.update(tax_rate:  new_rate)
         system "clear"
         puts "----------------------------"
-        puts "Hi #{self.name}, you have successfully changed your country's tax rate from #{old_rate * 100}% to #{new_rate * 100}%."
+        puts "Old Tax Rate: #{old_rate * 100}%", "New Tax rate: #{new_rate * 100}%."
         back_to_government_menu
     end
 
@@ -95,7 +95,7 @@ class Government < ActiveRecord::Base
             names = companies.map {|company| company.name}.uniq
             system "clear"
             puts "----------------------------"
-            names.each_with_index {|company, index| puts "#{index + 1}. Company name: #{company}"}
+            names.each_with_index {|company, index| puts "Tax Record No: #{index + 1}", "Paying Company name: #{company}"}
         end
         back_to_government_menu
     end

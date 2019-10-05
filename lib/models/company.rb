@@ -64,10 +64,12 @@ class Company < ActiveRecord::Base
 
   def change_product_price # update product price
     new_price = @@prompt.ask("What is the new product price? Type the new price in this format '00.00'")
-    self.update(product_price: new_price)
+    
+    product = @@prompt.ask("What product do you want to change the price?") #make this a scrollable options menu of products
+    product.update(product_price: new_price)
     system "clear"
     puts "----------------------------"
-    puts "Your product price has been successfully changed to #{self.product_price}"
+    puts "Your product price has been successfully changed to #{product.product_price}"
     back_to_company_menu
   end
 
