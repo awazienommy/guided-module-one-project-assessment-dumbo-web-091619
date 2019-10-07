@@ -69,27 +69,39 @@ end
   end
 
 
-#   def total_amount_spent
-#     calculates the total amount spent on all purchases
-#     list_of_purchases.map { |purchase| purchase.purchase_amount }.sum
-#   end
+  def total_amount_spent #calculates the total amount spent on all purchases
+     total = purchases.map { |purchase| purchase.purchase_amount }.sum
+     puts "Date: #{Time.now}", "Total Amount Spent: #{total}"
+  end
 
 
-#   def average_amount_spent
-#     determines the average amount spent on all purchases
-#     total_amount_spent / list_of_purchases.size
-#   end
+  def average_amount_spent #determines the average amount spent on all purchases
+    purchases.map { |purchase| purchase.purchase_amount }.sum / purchases.length
+  end
 
 
-#   def do_work
-#     # does work to increase balance and updates database
-#     self.balance += self.salary
-#     self.save
-#   end
+  def do_work #does work to increase balance and updates database
+    salary = 1000
+    new_balance = self.balance + salary
+    self.update(balance: new_balance)
+    puts "Congrats, you've been paid", "Payment date: #{Time.now}" "Payment amo"
+  end
 
 
-#   def self.close_account(id)
-#     # destroys customer instance and db info
-#     Customer.destroy(id)
-#   end
-# end
+  def close_account # destroys customer instance and db info
+    if @@prompt.yes?("Do you want to delete your accont and all your records?")
+        purchases.all.each {|purchase| purchase.delete }
+        self.delete
+        system "clear"
+        puts "----------------------------"
+        puts "Sorry to see you leave. Hopefully you can come back to the tax interchange later"
+    elsif @@prompt.yes?("Do you want to delete just the country account and leave your records?")
+        self.delete
+        system "clear"
+        puts "----------------------------"
+        puts "Sorry to see you leave. Hopefully you can come back to the tax interchange later"
+    end
+        Interface.welcome #Send them back to welcome page
+    end
+  end
+end

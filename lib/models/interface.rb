@@ -32,11 +32,11 @@ class Interface
         @@prompt.select("Welcome to Tax Interchange, what would you want to do today?") do |menu|
             menu.choice "Make a purchase", -> {Customer.new_purchase}
             menu.choice "Return a purchase", -> {Customer.make_return}
-            # menu.choice "List purchases", -> {Customer.list_of_purchases}
-            # menu.choice "How much have I spent in total?", -> {Customer.total_amount_spent}
-            # menu.choice "What is my average spending?", -> {Customer.average_amount_spent}
-            # menu.choice "Earn money", -> {Customer.do_work}
-            # menu.choice "Close account", -> {Customer.close_account}
+            menu.choice "List purchases", -> {Customer.list_of_purchases}
+            menu.choice "How much have I spent in total?", -> {Customer.total_amount_spent}
+            menu.choice "What is my average spending?", -> {Customer.average_amount_spent}
+            menu.choice "Earn money", -> {Customer.do_work}
+            menu.choice "Close account", -> {Customer.close_account}
             menu.choice "Go back to welcome screen", -> {welcome} #done
 
         end
@@ -56,24 +56,4 @@ class Interface
         puts "Thanks for using the Tax Exchange platform today"
         exit
     end
-
-    # @@prompt.select("What do you want to do?") do |menu|
-    #     menu.choice "Go back to government menu", -> {government_maim_menu}
-    #     menu.choice "Go back to welcome screen", -> {welcome}
-    #     menu.choice "Exit Interchange Plaform", -> {exit}
-    # end
-
-    # def self.prompt_to_go_to_main_menu_without_govt_menu
-    #     @@prompt.select("What do you want to do?") do |menu|
-    #         menu.choice "Go back to Gove menu", -> {main_menu}
-    #         menu.choice "Exit Interchange Plaform", -> {exit}
-    #     end
-    # end
-
-
-
-    
-
-
-
 end
